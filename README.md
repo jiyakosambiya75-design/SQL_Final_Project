@@ -6,11 +6,6 @@
 
 🌟 A MySQL-Based Relational Database Management Project 🌟
 
-"MySQL" (https://img.shields.io/badge/MySQL-Database-blue?style=for-the-badge&logo=mysql&logoColor=white)
-"SQL" (https://img.shields.io/badge/SQL-Queries-orange?style=for-the-badge&logo=databricks)
-"Database" (https://img.shields.io/badge/Database-Management-purple?style=for-the-badge)
-"Project" (https://img.shields.io/badge/Project-Academic-success?style=for-the-badge)
-
 📚 A smart way to manage university information using SQL!
 
 </div>---
