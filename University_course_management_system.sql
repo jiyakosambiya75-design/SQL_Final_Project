@@ -110,13 +110,15 @@ WHERE EnrollmentDate > '2022-12-31';
 
 
 -- 3. Retrieve courses offered by the Mathematics department with a limit of 5 courses.
-SELECT c.* 
-FROM courses AS c
-INNER JOIN departments AS d 
-ON d.DepartmentID = c.DepartmentID
-WHERE d.DepartmentName = 'Mathematics'
+-- 3. Retrieve courses offered by the Mathematics department with a limit of 5 courses.
+SELECT * 
+FROM courses 
+WHERE DepartmentID = (
+    SELECT DepartmentID 
+    FROM departments 
+    WHERE DepartmentName = 'Mathematics'
+)
 LIMIT 5;
-
 
 -- 4. Get the number of students enrolled in each course, filtering for courses with more than 5 students.
 SELECT c.CourseName, 
@@ -126,19 +128,13 @@ INNER JOIN enrollments AS e
 ON c.CourseID = e.CourseID GROUP BY c.CourseID, c.CourseName
 HAVING COUNT(e.StudentID) > 5;
 
-
 -- 5. Find students who are enrolled in both Introduction to SQL and Data Structures.
-SELECT s.StudentID, CONCAT(s.FirstName, ' ', s.LastName) AS StudentName
-FROM students s
-INNER JOIN enrollments e1 
-ON s.StudentID = e1.StudentID
-INNER JOIN courses c1 
-ON e1.CourseID = c1.CourseID
-INNER JOIN enrollments e2
-ON s.StudentID = e2.StudentID
-INNER JOIN courses c2 
-ON e2.CourseID = c2.CourseID
-WHERE c1.CourseName = 'Introduction to SQL' AND c2.CourseName = 'Data Structures';
+SELECT StudentID 
+FROM enrollments 
+WHERE CourseID = 101 AND StudentID IN (SELECT StudentID 
+FROM enrollments 
+WHERE CourseID = 102
+  );
 
 
 -- 6. Find students who are either enrolled in Introduction to SQL or Data Structures.
