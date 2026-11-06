@@ -2,10 +2,10 @@ CREATE DATABASE IF NOT EXISTS final_project;
 
 USE final_project;
 
--- Department Table
+-- 5. Departments Table
 CREATE TABLE departments(
-    Department_ID INT PRIMARY KEY,
-    Department_Name VARCHAR(50)
+DepartmentID INT PRIMARY KEY,
+DepartmentName VARCHAR(50)
 );
 
 INSERT INTO departments VALUES
@@ -15,14 +15,14 @@ INSERT INTO departments VALUES
 SELECT * FROM departments;
 
 
--- Students Table
+-- 1. Students Table
 CREATE TABLE students(
-    Student_ID INT PRIMARY KEY,
-    First_name VARCHAR(50),
-    Last_name VARCHAR(50),
+    StudentID INT PRIMARY KEY,
+    FirstName VARCHAR(50),
+    LastName VARCHAR(50),
     Email VARCHAR(100),
-    Birth_Date DATE,
-    Enrollment_Date DATE
+    BirthDate DATE,
+    EnrollmentDate DATE
 );
 
 INSERT INTO students VALUES
@@ -32,14 +32,14 @@ INSERT INTO students VALUES
 SELECT * FROM students;
 
 
--- Courses Table
+-- 2. Courses Table
 CREATE TABLE courses(
-    Course_ID INT PRIMARY KEY,
-    Course_Name VARCHAR(50),
-    Department_ID INT,
+    CourseID INT PRIMARY KEY,
+    CourseName VARCHAR(50),
+    DepartmentID INT,
     Credits INT,
-    FOREIGN KEY (Department_ID)
-    REFERENCES departments(Department_ID)
+FOREIGN KEY (DepartmentID) 
+REFERENCES departments(DepartmentID)
 );
 
 INSERT INTO courses VALUES
@@ -49,16 +49,16 @@ INSERT INTO courses VALUES
 SELECT * FROM courses;
 
 
--- nstructor Table
+-- 3. Instructors Table
 CREATE TABLE instructors(
-    Instructor_ID INT PRIMARY KEY,
-    First_name VARCHAR(50),
-    Last_name VARCHAR(50),
+    InstructorID INT PRIMARY KEY,
+    FirstName VARCHAR(50),
+    LastName VARCHAR(50),
     Email VARCHAR(100),
-    Department_ID INT,
+    DepartmentID INT,
     Salary DECIMAL(10,2),
-    FOREIGN KEY (Department_ID)
-    REFERENCES departments(Department_ID)
+FOREIGN KEY (DepartmentID)
+REFERENCES departments(DepartmentID)
 );
 
 INSERT INTO instructors VALUES
@@ -68,16 +68,16 @@ INSERT INTO instructors VALUES
 SELECT * FROM instructors;
 
 
---  Enrollments Table
+-- 4. Enrollments Table
 CREATE TABLE enrollments(
-    Enrollment_ID INT PRIMARY KEY,
-    Student_ID INT,
-    Course_ID INT,
-    Enrollment_Date DATE,
-    FOREIGN KEY (Student_ID)
-    REFERENCES students(Student_ID),
-    FOREIGN KEY (Course_ID)
-    REFERENCES courses(Course_ID)
+    EnrollmentID INT PRIMARY KEY,
+    StudentID INT,
+    CourseID INT,
+    EnrollmentDate DATE,
+FOREIGN KEY (StudentID) 
+REFERENCES students(StudentID),
+FOREIGN KEY (CourseID)
+REFERENCES courses(CourseID)
 );
 
 INSERT INTO enrollments VALUES
@@ -87,173 +87,151 @@ INSERT INTO enrollments VALUES
 SELECT * FROM enrollments;
 
 
--- 1. CRUD OPERATIONS
+---====================================================
 
-INSERT INTO students VALUES
-(3, 'Alice', 'Both', 'alice.both@email.com',
-'2000-01-08', '2021-08-05');
+-- 1. Perform CRUD Operations on all tables.
 
-UPDATE departments
-SET Department_Name = 'AI/ML'
-WHERE Department_ID = 1;
+-- [C]reate / Insert
+INSERT INTO students VALUES 
+(3, 'Alice', 'Both', 'alice.both@email.com', '2000-01-08', '2021-08-05');
 
-DELETE FROM students
-WHERE Student_ID = 3;
+-- [U]pdate
+UPDATE departments 
+SET DepartmentName = 'AI/ML' 
+WHERE DepartmentID = 1;
+
+-- [D]elete
+DELETE FROM students 
+WHERE StudentID = 3;
+
+-- 2. Retrieve students who enrolled after 2022.
+SELECT * FROM students 
+WHERE EnrollmentDate > '2022-12-31';
 
 
--- 2. Students enrolled after 2022
-
-SELECT * FROM students
-WHERE Enrollment_Date > '2021-12-31';
-
-
--- 3. Courses offered by Mathematics Department
-
-SELECT *
+-- 3. Retrieve courses offered by the Mathematics department with a limit of 5 courses.
+SELECT c.* 
 FROM courses AS c
-INNER JOIN departments AS d
-ON d.Department_ID = c.Department_ID
-WHERE d.Department_Name = 'Mathematics'
+INNER JOIN departments AS d 
+ON d.DepartmentID = c.DepartmentID
+WHERE d.DepartmentName = 'Mathematics'
 LIMIT 5;
 
 
--- 4. Students in each course (more than 5)
-
-SELECT c.Course_Name,
-COUNT(e.Student_ID) AS Total_Students
+-- 4. Get the number of students enrolled in each course, filtering for courses with more than 5 students.
+SELECT c.CourseName, 
+COUNT(e.StudentID) AS TotalStudents
 FROM courses AS c
-INNER JOIN enrollments AS e
-ON c.Course_ID = e.Course_ID
-GROUP BY c.Course_Name
-HAVING COUNT(e.Student_ID) > 5;
+INNER JOIN enrollments AS e 
+ON c.CourseID = e.CourseID GROUP BY c.CourseID, c.CourseName
+HAVING COUNT(e.StudentID) > 5;
 
 
--- 5. Students enrolled in BOTH courses
-
-SELECT s.Student_ID,
-CONCAT(s.First_name, ' ', s.Last_name) AS Student_Name
+-- 5. Find students who are enrolled in both Introduction to SQL and Data Structures.
+SELECT s.StudentID, CONCAT(s.FirstName, ' ', s.LastName) AS StudentName
 FROM students s
-INNER JOIN enrollments e1
-ON s.Student_ID = e1.Student_ID
-INNER JOIN courses c1
-ON e1.Course_ID = c1.Course_ID
+INNER JOIN enrollments e1 
+ON s.StudentID = e1.StudentID
+INNER JOIN courses c1 
+ON e1.CourseID = c1.CourseID
 INNER JOIN enrollments e2
-ON s.Student_ID = e2.Student_ID
-INNER JOIN courses c2
-ON e2.Course_ID = c2.Course_ID
-WHERE c1.Course_Name = 'Introduction to SQL'
-AND c2.Course_Name = 'Data Structures';
+ON s.StudentID = e2.StudentID
+INNER JOIN courses c2 
+ON e2.CourseID = c2.CourseID
+WHERE c1.CourseName = 'Introduction to SQL' AND c2.CourseName = 'Data Structures';
 
 
--- 6. Students enrolled in EITHER course
-
-SELECT DISTINCT s.Student_ID,
-CONCAT(s.First_name, ' ', s.Last_name) AS Student_Name
+-- 6. Find students who are either enrolled in Introduction to SQL or Data Structures.
+SELECT DISTINCT s.StudentID, 
+CONCAT(s.FirstName, ' ', s.LastName) AS StudentName
 FROM students s
-INNER JOIN enrollments e
-ON s.Student_ID = e.Student_ID
+INNER JOIN enrollments e 
+ON s.StudentID = e.StudentID
 INNER JOIN courses c
-ON e.Course_ID = c.Course_ID
-WHERE c.Course_Name IN ('Introduction to SQL', 'Data Structures');
+ON e.CourseID = c.CourseID
+WHERE c.CourseName IN ('Introduction to SQL', 'Data Structures');
 
 
--- 7. Average credits
-
-SELECT AVG(Credits) AS Average_Credits
+-- 7. Calculate the average number of credits for all courses.
+SELECT AVG(Credits) AS AverageCredits
 FROM courses;
 
 
--- 8. Maximum instructor salary
-
-SELECT MAX(i.Salary) AS Maximum_Salary
+-- 8. Find the maximum salary of instructors in the Computer Science department.
+SELECT MAX(i.Salary) AS MaximumSalary
 FROM instructors i
 INNER JOIN departments d
-ON i.Department_ID = d.Department_ID
-WHERE d.Department_Name = 'Computer Science';
+ON i.DepartmentID = d.DepartmentID
+WHERE d.DepartmentName = 'Computer Science';
 
 
--- 9. Students enrolled in each department
-
-SELECT d.Department_Name,
-COUNT(DISTINCT e.Student_ID) AS Total_Students
+-- 9. Count the number of students enrolled in each department.
+SELECT d.DepartmentName, 
+COUNT(DISTINCT e.StudentID) AS TotalStudents
 FROM departments d
-LEFT JOIN courses c
-ON d.Department_ID = c.Department_ID
-LEFT JOIN enrollments e
-ON c.Course_ID = e.Course_ID
-GROUP BY d.Department_ID, d.Department_Name;
+LEFT JOIN courses c 
+ON d.DepartmentID = c.DepartmentID
+LEFT JOIN enrollments e 
+ON c.CourseID = e.CourseID
+GROUP BY d.DepartmentID, d.DepartmentName;
 
 
--- 10. INNER JOIN
-
-SELECT s.Student_ID,
-CONCAT(s.First_name, ' ', s.Last_name) AS Student_Name,
-c.Course_Name
+-- 10. INNER JOIN: Retrieve students and their corresponding courses.
+SELECT s.StudentID,
+CONCAT(s.FirstName, ' ', s.LastName) AS StudentName, c.CourseName
 FROM students s
-INNER JOIN enrollments e
-ON s.Student_ID = e.Student_ID
-INNER JOIN courses c
-ON e.Course_ID = c.Course_ID;
+INNER JOIN enrollments e 
+ON s.StudentID = e.StudentID
+INNER JOIN courses c 
+ON e.CourseID = c.CourseID;
 
 
--- 11. LEFT JOIN
-
-SELECT s.Student_ID,
-CONCAT(s.First_name, ' ', s.Last_name) AS Student_Name,
-c.Course_Name
+-- 11. LEFT JOIN: Retrieve all students and their corresponding courses, if any.
+SELECT s.StudentID, CONCAT(s.FirstName, ' ', s.LastName) AS StudentName, c.CourseName
 FROM students s
-LEFT JOIN enrollments e
-ON s.Student_ID = e.Student_ID
-LEFT JOIN courses c
-ON e.Course_ID = c.Course_ID;
+LEFT JOIN enrollments e 
+ON s.StudentID = e.StudentID
+LEFT JOIN courses c 
+ON e.CourseID = c.CourseID;
 
 
--- 12. SUBQUERY
-
-SELECT Student_ID,
-CONCAT(First_name, ' ', Last_name) AS Student_Name
+-- 12. Subquery: Find students enrolled in courses that have more than 10 students.
+SELECT StudentID, 
+CONCAT(FirstName, ' ', LastName) AS StudentName
 FROM students
-WHERE Student_ID IN (SELECT Student_ID
-FROM enrollments
-WHERE Course_ID IN (SELECT Course_ID
-FROM enrollments GROUP BY Course_ID
-HAVING COUNT(Student_ID) > 10
-    )
+WHERE StudentID IN (SELECT StudentID 
+FROM enrollments 
+WHERE CourseID IN (SELECT CourseID 
+        FROM enrollments 
+        GROUP BY CourseID 
+        HAVING COUNT(StudentID) > 10)
 );
 
 
--- 13. Extract Year
-
-SELECT Student_ID,
-YEAR(Enrollment_Date) AS Enrollment_Year
+-- 13. Extract the year from the EnrollmentDate of students.
+SELECT StudentID,
+YEAR(EnrollmentDate) AS EnrollmentYear 
 FROM students;
 
 
--- 14. CONCAT Instructor Name
-
-SELECT Instructor_ID,
-CONCAT(First_name, ' ', Last_name) AS Full_Name
+-- 14. Concatenate the instructor's first and last name.
+SELECT InstructorID, CONCAT(FirstName, ' ', LastName) AS FullName
 FROM instructors;
 
 
--- 15. Running Total
-
-SELECT Enrollment_ID,
-Student_ID,
-Course_ID,
-COUNT(*) OVER (ORDER BY Enrollment_ID
-ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS Running_Total
+-- 15. Calculate the running total of students enrolled in courses.
+SELECT EnrollmentID, 
+StudentID,
+CourseID,
+COUNT(StudentID) OVER (ORDER BY EnrollmentID) AS RunningTotalStudents
 FROM enrollments;
 
 
--- 16. Senior or Junior
-
-SELECT Student_ID,
-CONCAT(First_name, ' ', Last_name) AS Student_Name,
-Enrollment_Date,
+-- 16. Label students as 'Senior' or 'Junior' based on their year of enrollment.
+SELECT StudentID,
+CONCAT(FirstName, ' ', LastName) AS StudentName, EnrollmentDate,
 CASE
-    WHEN Enrollment_Date < DATE_SUB(CURDATE(), INTERVAL 4 YEAR)
-    THEN 'Senior'
+    WHEN EnrollmentDate < DATE_SUB(CURDATE(), INTERVAL 4 YEAR) THEN 'Senior'
     ELSE 'Junior'
-END AS Student_Status
+END AS StudentStatus
 FROM students;
