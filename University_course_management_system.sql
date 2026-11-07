@@ -108,8 +108,6 @@ WHERE StudentID = 3;
 SELECT * FROM students 
 WHERE EnrollmentDate > '2022-12-31';
 
-
--- 3. Retrieve courses offered by the Mathematics department with a limit of 5 courses.
 -- 3. Retrieve courses offered by the Mathematics department with a limit of 5 courses.
 SELECT * 
 FROM courses 
