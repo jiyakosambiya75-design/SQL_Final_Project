@@ -173,3 +173,7 @@ To scale this foundational database into a complete, university-wide platform, t
 • 🚪 Classroom Allocation: An asset management module to map courses to physical room numbers, campus buildings, and weekly time slots to prevent scheduling conflicts.
 
 • 🔐 Role-Based Access Control (RBAC): Implementing database users and permissions so students can only view records, while registrars and faculty can modify them.
+
+---
+
+Explanation video: https://drive.google.com/file/d/1I8SSHjkYQU0qXCu-DncvGi7mkVB2fhpN/view?usp=drivesdk
