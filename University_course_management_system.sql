@@ -2,6 +2,13 @@ CREATE DATABASE IF NOT EXISTS final_project;
 
 USE final_project;
 
+---2nd time run krne pr error na aye isliye 
+DROP TABLE IF EXISTS enrollments;
+DROP TABLE IF EXISTS instructors;
+DROP TABLE IF EXISTS courses;
+DROP TABLE IF EXISTS students;
+DROP TABLE IF EXISTS departments;
+
 -- 5. Departments Table
 CREATE TABLE departments(
 DepartmentID INT PRIMARY KEY,
