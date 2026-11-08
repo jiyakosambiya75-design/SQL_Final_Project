@@ -40,13 +40,15 @@ SELECT * FROM students;
 
 
 -- 2. Courses Table
-CREATE TABLE courses(
-    CourseID INT PRIMARY KEY,
-    CourseName VARCHAR(50),
-    DepartmentID INT,
-    Credits INT,
-FOREIGN KEY (DepartmentID) 
-REFERENCES departments(DepartmentID)
+CREATE TABLE courses (
+    Courses_ID INT PRIMARY KEY,
+    Courses_Name VARCHAR(50),
+    Department_ID INT,
+    Faculty_ID INT,
+    FOREIGN KEY (Department_ID)
+    REFERENCES departments(Department_ID),
+    FOREIGN KEY (Faculty_ID)
+    REFERENCES faculty(Faculty_ID)
 );
 
 INSERT INTO courses VALUES
