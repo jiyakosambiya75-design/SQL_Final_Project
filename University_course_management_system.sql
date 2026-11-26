@@ -3,7 +3,6 @@ CREATE DATABASE IF NOT EXISTS final_project;
 
 USE final_project;
 
---- 2nd time run krne pr error na aye isliye
 DROP TABLE IF EXISTS enrollments;
 DROP TABLE IF EXISTS instructors;
 DROP TABLE IF EXISTS courses;
@@ -120,7 +119,6 @@ WHERE EnrollmentDate > '2022-12-31';
 
 
 -- 3. Retrieve courses offered by Mathematics department
--- with a limit of 5 courses.
 SELECT *
 FROM courses
 WHERE Department_ID = (
@@ -132,7 +130,6 @@ LIMIT 5;
 
 
 -- 4. Get the number of students enrolled in each course,
--- filtering for courses with more than 5 students.
 SELECT c.Courses_Name,
 COUNT(e.StudentID) AS TotalStudents
 FROM courses AS c
@@ -172,7 +169,6 @@ FROM courses;
 
 
 -- 8. Find the maximum salary of instructors
--- in the Computer Science department.
 SELECT MAX(i.Salary) AS MaximumSalary
 FROM instructors i
 INNER JOIN departments d
@@ -214,7 +210,6 @@ ON e.CourseID = c.Courses_ID;
 
 
 -- 12. Subquery: Find students enrolled in courses
--- that have more than 10 students.
 SELECT StudentID,
 CONCAT(FirstName, ' ', LastName) AS StudentName
 FROM students
